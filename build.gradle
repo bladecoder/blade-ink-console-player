@@ -1,0 +1,24 @@
+apply plugin: "java"
+apply plugin: 'application'
+
+group = 'com.bladecoder.ink.console'
+
+mainClassName = 'com.bladecoder.ink.console.InkPlayer'
+
+// In this section you declare where to find the dependencies of your project
+repositories {
+    jcenter()
+}
+
+// In this section you declare the dependencies for your production and test code
+dependencies {
+    compile "com.bladecoder.ink:blade-ink:0.1.0"
+}
+
+run {
+	standardInput = System.in
+
+    if ( project.hasProperty("appArgs") ) {
+        args Eval.me(appArgs)
+    }
+}
