@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.List;
 
 import com.bladecoder.ink.runtime.Choice;
@@ -27,6 +28,7 @@ public class InkPlayer {
 	private final PrintStream out = System.out;
 	private final PrintStream err = System.err;
 	private boolean isAnsiCapable = false;
+	private Story story = null;
 
 	private String filename;
 
@@ -47,7 +49,7 @@ public class InkPlayer {
 
 	public void run() throws Exception {
 		String json = getJsonString(filename).replace('\uFEFF', ' ');
-		Story story = new Story(json);
+		story = new Story(json);
 
 		while (story.canContinue() || story.getCurrentChoices().size() > 0) {
 
@@ -90,25 +92,63 @@ public class InkPlayer {
 			out.println("\nTHE END.");
 	}
 
-	private int getChoiceIndex(List<Choice> currentChoices) throws IOException {
+	private int getChoiceIndex(List<Choice> currentChoices) throws Exception {
 
 		int i = -1;
 
 		while (i < 1 || i > currentChoices.size()) {
-			
+
 			if (isAnsiCapable)
 				out.print(ANSI_CYAN + "\nEnter choice: " + ANSI_RESET);
 			else
 				out.print("\nEnter choice: ");
 
-			try {
-				i = Integer.parseInt(in.readLine());
-			} catch (NumberFormatException nfe) {
-			}
+			String input = in.readLine();
 
-			if (i < 1 || i > currentChoices.size()) {
-				out.println("Invalid choice!");
-				i = -1;
+			if (input.equals("help")) {
+				out.println("Commands:\n\tload <filename>\n\tsave <filename>\n\tquit\n\t");
+
+			} else if (input.equals("quit") || input.equals("exit")) {
+				System.exit(0);
+			} else if (input.startsWith("load ")) {
+				String filename = input.substring(5).trim();
+
+				if (filename.length() != 0) {
+					try {
+						String saveString = getJsonString(filename);
+						story.getState().loadJson(saveString);
+					} catch (IOException e) {
+						out.println("Invalid filename!");
+					}
+				} else {
+					out.println("Invalid filename!");
+				}
+			} else if (input.startsWith("save ")) {
+				String saveString = story.getState().toJson();
+
+				String filename = input.substring(5).trim();
+				if (filename.length() != 0) {
+					try {
+						PrintWriter writer = new PrintWriter(filename, "UTF-8");
+						writer.println(saveString);
+						writer.close();
+					} catch (IOException e) {
+						out.println("Invalid filename!");
+					}
+				} else {
+					out.println("Invalid filename!");
+				}
+			} else {
+
+				try {
+					i = Integer.parseInt(input);
+				} catch (NumberFormatException nfe) {
+				}
+
+				if (i < 1 || i > currentChoices.size()) {
+					out.println("Invalid choice!");
+					i = -1;
+				}
 			}
 		}
 
