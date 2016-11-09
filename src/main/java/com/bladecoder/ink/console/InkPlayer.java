@@ -48,7 +48,7 @@ public class InkPlayer {
 	}
 
 	public void run() throws Exception {
-		String json = getJsonString(filename).replace('\uFEFF', ' ');
+		String json = getJsonString(filename);
 		story = new Story(json);
 
 		while (story.canContinue() || story.getCurrentChoices().size() > 0) {
@@ -179,6 +179,10 @@ public class InkPlayer {
 		try {
 			StringBuilder sb = new StringBuilder();
 			String line = br.readLine();
+
+			// Replace the BOM mark
+			if(line != null)
+				line = line.replace('\uFEFF', ' ');
 
 			while (line != null) {
 				sb.append(line);
