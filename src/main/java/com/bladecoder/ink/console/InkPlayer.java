@@ -50,6 +50,7 @@ public class InkPlayer {
 	public void run() throws Exception {
 		String json = getJsonString(filename);
 		story = new Story(json);
+		story.setAllowExternalFunctionFallbacks(true);
 
 		while (story.canContinue() || story.getCurrentChoices().size() > 0) {
 
