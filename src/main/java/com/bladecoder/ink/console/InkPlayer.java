@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
 import java.util.List;
 
 import com.bladecoder.ink.runtime.Choice;
@@ -24,7 +25,7 @@ public class InkPlayer {
 	public static final String ANSI_CYAN = "\u001B[36m";
 	public static final String ANSI_WHITE = "\u001B[37m";
 
-	private final BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+	private final BufferedReader in = new BufferedReader(new InputStreamReader(System.in, Charset.defaultCharset()));
 	private final PrintStream out = System.out;
 	private final PrintStream err = System.err;
 	private boolean isAnsiCapable = false;
