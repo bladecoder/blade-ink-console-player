@@ -83,15 +83,8 @@ public class InkPlayer {
 				}
 
 				story.chooseChoiceIndex(getChoiceIndex(story.getCurrentChoices()));
-
-				out.println();
 			}
 		}
-
-		if (isAnsiCapable)
-			out.println(ANSI_CYAN + "\nTHE END." + ANSI_RESET);
-		else
-			out.println("\nTHE END.");
 	}
 
 	private int getChoiceIndex(List<Choice> currentChoices) throws Exception {
@@ -101,9 +94,9 @@ public class InkPlayer {
 		while (i < 1 || i > currentChoices.size()) {
 
 			if (isAnsiCapable)
-				out.print(ANSI_CYAN + "\nEnter choice: " + ANSI_RESET);
+				out.print(ANSI_CYAN + "?> " + ANSI_RESET);
 			else
-				out.print("\nEnter choice: ");
+				out.print("?> ");
 
 			String input = in.readLine();
 
