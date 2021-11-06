@@ -1,3 +1,5 @@
+-> choice_test
+
 === choice_test ===
         Test conditional choices
         * { true } { false } not displayed
